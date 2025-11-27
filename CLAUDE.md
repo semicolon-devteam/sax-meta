@@ -83,9 +83,43 @@ git pull origin main
 2. `sax-meta/` 커밋 및 푸시
 3. `.claude/sax-meta/` 에서 `git pull` 로 동기화
 
-### 4. 작업 완료 후 버저닝 체크 필수 원칙
+### 4. 패키지 접두사 명령 규칙
 
-> **모든 SAX 작업 완료 후 버저닝 필요 여부를 반드시 체크한다.**
+> **특정 패키지를 지정하여 작업하거나, 전체 패키지에 일괄 적용할 수 있다.**
+
+**접두사 형식**:
+
+| 접두사 | 대상 | 예시 |
+|--------|------|------|
+| `[po]` | sax-po 패키지만 | `[po] 새 skill 추가해줘` |
+| `[next]` | sax-next 패키지만 | `[next] orchestrator 수정해줘` |
+| `[core]` | sax-core 패키지만 | `[core] 원칙 추가해줘` |
+| `[meta]` | sax-meta 패키지만 | `[meta] 규칙 수정해줘` |
+| `[all]` | 모든 패키지 | `[all] 버전 업데이트해줘` |
+| (없음) | 모든 패키지 | `버전 업데이트해줘` |
+
+**동작 방식**:
+
+- 접두사 지정 시: 해당 서브모듈 디렉토리에서만 작업
+- 접두사 미지정 또는 `[all]`: 모든 서브모듈에 일괄 적용
+
+**예시**:
+
+```bash
+# 사용자 입력
+"[po] sax-update skill 추가해줘"
+→ sax-po/skills/sax-update/ 에만 작업
+
+"[all] VERSION 파일 업데이트해줘"
+→ sax-core, sax-meta, sax-po, sax-next 모두 업데이트
+
+"새 Agent 추가해줘"
+→ 문맥에 따라 대상 패키지 판단 또는 확인 질문
+```
+
+### 5. 작업 완료 후 버저닝 및 커밋 필수 원칙
+
+> **모든 SAX 작업 완료 후 버저닝과 표준 커밋을 반드시 수행한다.**
 
 **버저닝이 필요한 변경**:
 
@@ -97,6 +131,40 @@ git pull origin main
 | CLAUDE.md 섹션 추가/변경 | MINOR | 새 규칙 추가 |
 | 버그/오타 수정 | PATCH | 문서 오타 수정 |
 | Breaking Change | MAJOR | 워크플로우 근본 변경 |
+
+**버저닝 커밋 메시지 형식** (필수):
+
+```text
+🔖 [SAX] {version}: {변경 요약}
+
+- 상세 변경 내용 1
+- 상세 변경 내용 2
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**예시**:
+
+```text
+🔖 [SAX] 0.2.0: sax-update skill 추가
+
+- sax-update skill 추가 (패키지 업데이트 기능)
+- orchestrator에 SAX 업데이트 라우팅 추가
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**버저닝 작업 순서** (필수):
+
+1. VERSION 파일 업데이트 (예: `0.1.0` → `0.2.0`)
+2. CHANGELOG/{version}.md 파일 생성
+3. 표준 커밋 메시지로 커밋
+4. GitHub에 푸시
+5. 서브모듈 사용 환경이면 `.claude/` 동기화
 
 **작업 완료 후 필수 출력**:
 
