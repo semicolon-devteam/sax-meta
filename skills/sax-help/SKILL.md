@@ -90,16 +90,94 @@ SAX-Meta 패키지 사용자(SAX 개발자, 패키지 관리자)에게 사용 �
 2. 위 출력 포맷으로 도움말 출력
 3. 사용자 추가 질문 대기
 
+## 대화형 워크플로우
+
+### Step 1: 상황 파악
+
+사용자의 현재 상황을 파악합니다:
+
+```markdown
+[SAX] Skill: sax-help 실행
+
+## 🤝 SAX 도우미 (패키지 개발자/관리자)
+
+무엇을 도와드릴까요?
+
+### 💭 질문 유형을 선택하세요
+
+1. **📍 SAX 구조 이해**: "SAX 패키지 구조가 어떻게 되나요?"
+2. **🔧 Agent/Skill/Command 관리**: "새 Agent를 추가하고 싶어요"
+3. **📦 패키지 배포**: "패키지를 배포하고 싶어요"
+4. **🔄 버저닝**: "버전 릴리스는 어떻게 하나요?"
+5. **🛠️ 도구 사용법**: "각 매니저(Agent/Skill/Command)는 뭐가 달라요?"
+6. **❓ 기타**: "다른 질문이 있어요"
+
+번호를 선택하거나 자유롭게 질문해주세요.
+```
+
+### Step 2: 맞춤형 응답
+
+사용자 선택에 따라 적절한 정보 제공:
+
+- **1️⃣ SAX 구조**: SAX 패키지 계층 구조 설명
+- **2️⃣ 컴포넌트 관리**: 해당 Manager Agent로 위임
+- **3️⃣ 패키지 배포**: package-deploy skill 안내
+- **4️⃣ 버저닝**: version-manager skill 안내
+- **5️⃣ 도구 사용법**: 각 Manager 역할 비교 설명
+- **6️⃣ 기타**: 자유 질문 응답
+
+### Step 3: 추가 질문 유도
+
+```markdown
+---
+
+**도움이 되셨나요?**
+
+다른 궁금한 점이 있으시면 언제든 물어보세요:
+- "Agent 만들어줘" → agent-manager 호출
+- "Skill 추가해줘" → skill-manager 호출
+- "/SAX:help" → 도움말 처음으로
+```
+
+## Integration with Other Tools
+
+### agent-manager Agent
+
+```markdown
+User: "새 Agent 만들어줘"
+→ [SAX] Agent 위임: agent-manager (사유: SAX Agent 생성)
+```
+
+### skill-manager Agent
+
+```markdown
+User: "새 Skill 추가해줘"
+→ [SAX] Agent 위임: skill-manager (사유: SAX Skill 생성)
+```
+
+### command-manager Agent
+
+```markdown
+User: "새 Command 만들어줘"
+→ [SAX] Agent 위임: command-manager (사유: SAX Command 생성)
+```
+
 ## SAX Message Format
 
 ```markdown
 [SAX] Skill: sax-help 실행
 
-/
-
-# SAX-Meta 도움말
+## 🤝 SAX 도우미 (패키지 개발자/관리자)
 ...
 ```
+
+## Critical Rules
+
+1. **대화형 접근**: 사용자가 질문을 선택하거나 자유롭게 물어볼 수 있도록
+2. **SAX 개발자 맥락 유지**: 패키지 개발/관리 관점의 응답
+3. **단계적 안내**: 한 번에 한 단계씩, 명확하게
+4. **추가 질문 유도**: 항상 "더 궁금한 점?" 질문
+5. **Agent/Skill 위임**: 복잡한 작업은 적절한 Agent/Skill로 위임
 
 ## Related
 

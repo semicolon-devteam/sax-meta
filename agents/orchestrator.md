@@ -60,6 +60,41 @@ Orchestrator는 다음을 **직접 처리하지 않습니다**:
 
 ## Intent Classification & Routing
 
+### 🔴 키워드 유사어 그룹 (Synonym Groups)
+
+라우팅 매칭 시 아래 유사어들은 **동일하게 취급**합니다 (대소문자 무시):
+
+| 그룹 ID | 유사어 |
+|---------|--------|
+| `@AGENT` | agent, Agent, AGENT, 에이전트 |
+| `@SKILL` | skill, Skill, SKILL, 스킬 |
+| `@COMMAND` | command, Command, COMMAND, 커맨드, 명령어, 슬래시 커맨드 |
+| `@CREATE` | 만들어, 추가, 생성, 새, create, add, new |
+| `@UPDATE` | 수정, 변경, 업데이트, 고쳐, update, modify, change |
+| `@DELETE` | 삭제, 제거, 없애, delete, remove |
+| `@REVIEW` | 검토, 분석, 확인, 체크, 리뷰, 리스트업, review, analyze, check, audit, 검토해봐, 분석해봐, 확인해봐 |
+
+### 🔴 복합 의도 매칭 규칙
+
+**매칭 우선순위**: 복합 키워드 조합 > 단일 키워드
+
+사용자 입력에 아래 **두 그룹의 키워드가 함께 포함**되면 해당 Manager로 라우팅합니다:
+
+| 복합 패턴 | Route To | 예시 입력 |
+|-----------|----------|-----------|
+| `@AGENT` + `@CREATE` | `agent-manager` | "에이전트 만들어줘", "new agent 추가" |
+| `@AGENT` + `@UPDATE` | `agent-manager` | "Agent 수정해줘", "에이전트 변경" |
+| `@AGENT` + `@DELETE` | `agent-manager` | "에이전트 삭제", "agent 제거해줘" |
+| `@AGENT` + `@REVIEW` | `agent-manager` | "agent 검토해봐", "에이전트 분석해줘" |
+| `@SKILL` + `@CREATE` | `skill-manager` | "스킬 추가해줘", "새 Skill 만들어" |
+| `@SKILL` + `@UPDATE` | `skill-manager` | "skill 수정", "스킬 변경해줘" |
+| `@SKILL` + `@DELETE` | `skill-manager` | "스킬 삭제해줘", "Skill 제거" |
+| `@SKILL` + `@REVIEW` | `skill-manager` | "Skill 검토해봐", "스킬 분석해줘" |
+| `@COMMAND` + `@CREATE` | `command-manager` | "커맨드 만들어", "Command 추가해줘" |
+| `@COMMAND` + `@UPDATE` | `command-manager` | "명령어 수정", "command 변경해줘" |
+| `@COMMAND` + `@DELETE` | `command-manager` | "Command 삭제", "커맨드 제거해줘" |
+| `@COMMAND` + `@REVIEW` | `command-manager` | "command 검토해봐", "커맨드 분석해줘" |
+
 ### Routing Decision Table
 
 | User Intent | Route To | Detection Keywords |
@@ -67,15 +102,15 @@ Orchestrator는 다음을 **직접 처리하지 않습니다**:
 | SAX init 커밋 | `sax-init` 프로세스 | "SAX init", "SAX 설치 커밋", "SAX init 커밋해줘" |
 | 피드백 | `skill:feedback` | "/SAX:feedback", "피드백", "피드백해줘", "버그 신고", "제안할게" |
 | SAX 동작 오류 지적 | `skill:feedback` | "SAX가 왜", "SAX 동작이", "[SAX] 메시지가", "SAX 결과가" |
-| Agent 생성/수정/삭제/분석 | `agent-manager` | "Agent 만들어", "새 Agent", "Agent 추가", "Agent 수정", "Agent 변경", "Agent 삭제", "Agent 제거", "Agent 검토", "Agent 분석", "Agent 리스트업" |
-| Skill 생성/수정/삭제/분석 | `skill-manager` | "Skill 만들어", "새 Skill", "Skill 추가", "Skill 수정", "Skill 변경", "Skill 삭제", "Skill 제거", "Skill 검토", "Skill 분석", "Skill 리스트업", "스킬 만들어", "새 스킬", "스킬 추가", "스킬 수정", "스킬 삭제", "스킬 검토", "스킬 분석" |
-| Command 생성/수정/삭제/분석 | `command-manager` | "Command 만들어", "슬래시 커맨드", "/sc:", "Command 수정", "Command 변경", "Command 삭제", "Command 제거", "Command 검토", "Command 분석" |
-| 패키지 검증 | `skill:package-validator` | "검증", "구조 확인", "패키지 체크" |
-| 버전 관리 | `skill:version-manager` | "버전", "릴리스", "CHANGELOG" |
+| Agent 관리 | `agent-manager` | `@AGENT` + (`@CREATE` \| `@UPDATE` \| `@DELETE` \| `@REVIEW`) |
+| Skill 관리 | `skill-manager` | `@SKILL` + (`@CREATE` \| `@UPDATE` \| `@DELETE` \| `@REVIEW`) |
+| Command 관리 | `command-manager` | `@COMMAND` + (`@CREATE` \| `@UPDATE` \| `@DELETE` \| `@REVIEW`), "/sc:" |
+| 패키지 검증 | `skill:package-validator` | "검증", "구조 확인", "패키지 체크", "validate" |
+| 버전 관리 | `skill:version-manager` | "버전", "릴리스", "CHANGELOG", "버저닝", "버전 올려" |
 | 패키지 동기화 | `skill:package-sync` | "동기화", ".claude 동기화", "sync" |
 | 패키지 배포 | `skill:package-deploy` | "배포", "deploy", "설치", "install" |
 | 패키지 설계 | `sax-architect` | "구조", "설계", "아키텍처", "개선" |
-| 도움 요청 | `skill:sax-help` | "/SAX:help", "도움말", "SAX란", "어떻게 해" |
+| 도움 요청 | `skill:sax-help` | "/SAX:help", "도움말", "SAX란", "어떻게 해", "뭘 해야", "help" |
 
 ### SAX 메시지 포맷
 

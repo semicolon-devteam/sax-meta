@@ -42,22 +42,33 @@ gh api repos/semicolon-devteam/sax-core/contents/PRINCIPLES.md --jq '.content' |
 ### 동작 규칙
 
 1. **사용자 요청 수신 시**: 즉시 `agents/orchestrator.md` 읽기
-2. **Orchestrator가 적절한 Agent/Skill 결정**
+2. **Orchestrator Routing Table에서 의도 매칭**
 3. **SAX 메시지 포맷으로 라우팅 결과 출력**
+4. **매칭된 Agent/Skill로 위임**
 
-### 예외 없음
+### 🔴 반드시 Orchestrator 메시지 출력
 
-- 단순 질문도 Orchestrator 거침
-- 직접 Agent/Skill 호출 금지
-- CLAUDE.md에서 Agent 목록 참조하지 않음 (Orchestrator가 관리)
-
-### 메시지 포맷 (sax-core/MESSAGE_RULES.md 준수)
+**모든 SAX 요청 처리 시 아래 형식의 메시지를 먼저 출력합니다:**
 
 ```markdown
 [SAX] Orchestrator: 의도 분석 완료 → {intent_category}
 
 [SAX] Agent 위임: {agent_name} (사유: {reason})
 ```
+
+또는 Skill 호출 시:
+
+```markdown
+[SAX] Orchestrator: 의도 분석 완료 → {intent_category}
+
+[SAX] Skill 호출: {skill_name}
+```
+
+### 예외 없음
+
+- 단순 질문도 Orchestrator 거침
+- 직접 Agent/Skill 호출 금지
+- Orchestrator 메시지 생략 금지
 
 ---
 
