@@ -107,6 +107,7 @@ Claude Code의 slash command 규칙에 따라 SAX 커맨드 라이프사이클 �
 - [Create & Update Workflow](references/create-update-workflow.md)
 - [Delete & Audit Workflow](references/delete-audit-workflow.md)
 - [Command Template](references/command-template.md)
+- [Multi-Package Workflow](references/multi-package-workflow.md)
 
 ## Related
 

@@ -139,6 +139,7 @@ agents/{agent-name}/
 - [Sub-Agent 최적화 규칙](references/sub-agent-optimization.md)
 - [Workflow Phases 상세](references/workflow-phases.md)
 - [템플릿 및 출력 포맷](references/templates.md)
+- [Multi-Package Workflow](references/multi-package-workflow.md)
 
 ## Related
 

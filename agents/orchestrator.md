@@ -66,7 +66,7 @@ Orchestrator는 다음을 **직접 처리하지 않습니다**:
 |-------------|----------|-------------------|
 | SAX init 커밋 | `sax-init` 프로세스 | "SAX init", "SAX 설치 커밋", "SAX init 커밋해줘" |
 | 피드백 | `skill:feedback` | "/SAX:feedback", "피드백", "피드백해줘", "버그 신고", "제안할게" |
-| SAX 동작 오류 지적 | `skill:feedback` (문제 해결 후) | "왜 이렇게 만들었어", "왜 이렇게 동작해", "예상한 결과가 아닌데", "의도한 대로 안 되네" |
+| SAX 동작 오류 지적 | `skill:feedback` | "SAX가 왜", "SAX 동작이", "[SAX] 메시지가", "SAX 결과가" |
 | Agent 생성/수정/삭제/분석 | `agent-manager` | "Agent 만들어", "새 Agent", "Agent 추가", "Agent 수정", "Agent 변경", "Agent 삭제", "Agent 제거", "Agent 검토", "Agent 분석", "Agent 리스트업" |
 | Skill 생성/수정/삭제/분석 | `skill-manager` | "Skill 만들어", "새 Skill", "Skill 추가", "Skill 수정", "Skill 변경", "Skill 삭제", "Skill 제거", "Skill 검토", "Skill 분석", "Skill 리스트업", "스킬 만들어", "새 스킬", "스킬 추가", "스킬 수정", "스킬 삭제", "스킬 검토", "스킬 분석" |
 | Command 생성/수정/삭제/분석 | `command-manager` | "Command 만들어", "슬래시 커맨드", "/sc:", "Command 수정", "Command 변경", "Command 삭제", "Command 제거", "Command 검토", "Command 분석" |
@@ -75,16 +75,51 @@ Orchestrator는 다음을 **직접 처리하지 않습니다**:
 | 패키지 동기화 | `skill:package-sync` | "동기화", ".claude 동기화", "sync" |
 | 패키지 배포 | `skill:package-deploy` | "배포", "deploy", "설치", "install" |
 | 패키지 설계 | `sax-architect` | "구조", "설계", "아키텍처", "개선" |
-| 도움 요청 | 대화형 응답 (직접 처리) | "도움말", "SAX란", "어떻게 해" |
+| 도움 요청 | `skill:sax-help` | "/SAX:help", "도움말", "SAX란", "어떻게 해" |
 
 ### SAX 메시지 포맷
 
-#### 라우팅 성공 시
+#### Agent 위임 시
 
 ```markdown
 [SAX] Orchestrator: 의도 분석 완료 → {intent_category}
 
 [SAX] Agent 위임: {target_agent} (사유: {reason})
+```
+
+#### Skill 호출 시
+
+> **🔴 중요**: Skill 호출 시 **Agent 위임이 아닌 Skill 호출**임을 명시합니다.
+
+```markdown
+[SAX] Orchestrator: 의도 분석 완료 → {intent_category}
+
+[SAX] Skill 호출: {skill_name}
+
+/
+```
+
+**호출 방법**: Routing Table에서 `skill:{skill_name}` 형식으로 지정된 경우:
+
+1. Orchestrator가 의도 분석 메시지 출력
+2. `[SAX] Skill 호출: {skill_name}` 메시지 출력
+3. `/` (슬래시) 출력으로 메시지 블록 종료
+4. 해당 Skill의 SKILL.md를 참조하여 Skill 로직 실행
+5. Skill 내부 시스템 메시지 출력
+
+**예시 (feedback Skill 호출)**:
+
+```markdown
+User: SAX가 왜 이렇게 동작해?
+
+[SAX] Orchestrator: 의도 분석 완료 → SAX 동작 오류 지적
+
+[SAX] Skill 호출: feedback
+
+/
+
+[SAX] Skill: feedback 호출 - 버그 리포트
+...
 ```
 
 #### 라우팅 실패 시

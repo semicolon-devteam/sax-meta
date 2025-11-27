@@ -106,3 +106,4 @@ SAX Skill 라이프사이클 전체를 관리하며, Anthropic Skills 표준을 
 - [Update & Delete Workflow](references/update-delete-workflow.md)
 - [Audit Workflow](references/audit-workflow.md)
 - [Progressive Disclosure Patterns](references/progressive-disclosure.md)
+- [Multi-Package Workflow](references/multi-package-workflow.md)
