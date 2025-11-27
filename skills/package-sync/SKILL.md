@@ -9,6 +9,8 @@ tools: [Bash, Read, Grep]
 # package-sync Skill
 
 > SAX 패키지 소스 → .claude/ 디렉토리 동기화 자동화
+>
+> **SoT 참조**: 패키징 규칙은 `sax-core/PACKAGING.md`에서 관리됩니다.
 
 ## Purpose
 

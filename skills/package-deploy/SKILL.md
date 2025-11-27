@@ -9,6 +9,8 @@ tools: [Bash, Read, Grep]
 # package-deploy Skill
 
 > SAX 패키지를 외부 프로젝트에 배포하는 자동화 Skill
+>
+> **SoT 참조**: 패키징 규칙은 `sax-core/PACKAGING.md`에서 관리됩니다.
 
 ## Purpose
 

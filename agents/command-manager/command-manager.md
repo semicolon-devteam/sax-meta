@@ -18,6 +18,8 @@ model: haiku
 # Command Manager
 
 > SAX 슬래시 커맨드 생성, 수정, 삭제, 분석 통합 관리 에이전트
+>
+> **SoT 참조**: Command 설계 원칙은 `sax-core/PRINCIPLES.md`에서 관리됩니다.
 
 ## 역할
 

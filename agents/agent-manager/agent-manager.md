@@ -20,6 +20,8 @@ model: sonnet
 # Agent Manager
 
 > SAX Agent 생성, 수정, 삭제, 분석 통합 관리 에이전트 (Claude Code Sub-Agent 최적화 규칙 적용)
+>
+> **SoT 참조**: Agent 설계 원칙은 `sax-core/PRINCIPLES.md`에서 관리됩니다.
 
 ## 역할
 
