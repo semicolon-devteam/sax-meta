@@ -127,26 +127,26 @@ remove_submodule() {
 
     print_step "기존 서브모듈 삭제 중: $path"
 
-    # 1. .gitmodules에서 삭제
+    # 1. git submodule deinit으로 안전하게 해제
+    git submodule deinit -f "$path" 2>/dev/null || true
+
+    # 2. .gitmodules에서 삭제
     if [ -f ".gitmodules" ]; then
         git config --file .gitmodules --remove-section "submodule.$path" 2>/dev/null || true
         # .gitmodules가 비어있으면 삭제
         if [ ! -s ".gitmodules" ]; then
             rm -f ".gitmodules"
-            git rm --cached .gitmodules 2>/dev/null || true
+            git rm -f --cached .gitmodules 2>/dev/null || true
         else
             git add .gitmodules 2>/dev/null || true
         fi
     fi
 
-    # 2. .git/config에서 삭제
+    # 3. .git/config에서 삭제
     git config --remove-section "submodule.$path" 2>/dev/null || true
 
-    # 3. git index에서 삭제 (강제)
+    # 4. git rm으로 index에서 삭제
     git rm -rf --cached "$path" 2>/dev/null || true
-
-    # 4. 스테이징 영역 초기화 (해당 경로)
-    git reset HEAD "$path" 2>/dev/null || true
 
     # 5. 디렉토리 삭제
     rm -rf "$path"
@@ -154,10 +154,13 @@ remove_submodule() {
     # 6. .git/modules에서 삭제
     rm -rf ".git/modules/$path" 2>/dev/null || true
 
-    # 7. 최종 확인 - 여전히 index에 있으면 강제 삭제
-    if git ls-files --stage "$path" 2>/dev/null | grep -q .; then
-        git update-index --force-remove "$path" 2>/dev/null || true
-    fi
+    # 7. 최종 확인 - index에서 해당 경로의 모든 항목 강제 삭제
+    git ls-files --stage "$path" 2>/dev/null | while read -r mode hash stage file; do
+        git update-index --force-remove "$file" 2>/dev/null || true
+    done
+
+    # 8. 혹시 남아있는 160000 (gitlink) 엔트리 삭제
+    git update-index --force-remove "$path" 2>/dev/null || true
 
     print_success "서브모듈 삭제 완료: $path"
 }
