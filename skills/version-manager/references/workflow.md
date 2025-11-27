@@ -87,11 +87,29 @@ echo "{new_version}" > sax/VERSION
 # 변경사항 스테이징
 git add sax/VERSION sax/CHANGELOG/
 
-# 버전 커밋
-git commit -m "📝 [SAX] v{new_version}"
+# 버전 커밋 (CLAUDE.md 버저닝 커밋 형식 준수)
+git commit -m "🔖 [SAX] {new_version}: {변경 요약}
+
+- 상세 변경 내용 1
+- 상세 변경 내용 2
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
-**커밋 메시지 형식**: `📝 [SAX] v{new_version}`
+**커밋 메시지 형식** (CLAUDE.md 규칙):
+
+```text
+🔖 [SAX] {version}: {변경 요약}
+
+- 상세 변경 내용 1
+- 상세 변경 내용 2
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
 
 **포함 파일**:
 

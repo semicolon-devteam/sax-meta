@@ -40,8 +40,15 @@ touch sax/CHANGELOG/3.15.0.md
 # 5. INDEX.md 업데이트
 # Latest Version, Version History 섹션 업데이트
 
-# 6. 커밋
-git commit -m "📝 [SAX] v3.15.0"
+# 6. 커밋 (CLAUDE.md 버저닝 커밋 형식 준수)
+git commit -m "🔖 [SAX] 3.15.0: {변경 요약}
+
+- 상세 변경 내용 1
+- 상세 변경 내용 2
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
 ## Semantic Versioning 요약
