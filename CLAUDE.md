@@ -95,21 +95,41 @@ git pull origin main
 | `[next]` | sax-next 패키지만 | `[next] orchestrator 수정해줘` |
 | `[core]` | sax-core 패키지만 | `[core] 원칙 추가해줘` |
 | `[meta]` | sax-meta 패키지만 | `[meta] 규칙 수정해줘` |
+| `[po \| next]` | 복수 패키지 지정 | `[po \| next] sax-update skill 추가해줘` |
 | `[all]` | 모든 패키지 | `[all] 버전 업데이트해줘` |
 | (없음) | 모든 패키지 | `버전 업데이트해줘` |
 
+**복수 패키지 지정 (파이프 구문)**:
+
+`|` (파이프)를 사용하여 여러 패키지를 동시에 지정할 수 있습니다.
+
+| 복수 접두사 | 대상 |
+|-------------|------|
+| `[po \| next]` | sax-po와 sax-next |
+| `[core \| meta]` | sax-core와 sax-meta |
+| `[po \| next \| core]` | sax-po, sax-next, sax-core |
+
 **동작 방식**:
 
-- 접두사 지정 시: 해당 서브모듈 디렉토리에서만 작업
+- 단일 접두사 지정 시: 해당 서브모듈 디렉토리에서만 작업
+- 복수 접두사 지정 시 (`|` 사용): 지정된 모든 서브모듈에 동일 작업 적용
 - 접두사 미지정 또는 `[all]`: 모든 서브모듈에 일괄 적용
 
 **예시**:
 
 ```bash
-# 사용자 입력
+# 단일 패키지
 "[po] sax-update skill 추가해줘"
 → sax-po/skills/sax-update/ 에만 작업
 
+# 복수 패키지 (파이프 구문)
+"[po | next] sax-update skill 추가해줘"
+→ sax-po/skills/sax-update/ 와 sax-next/skills/sax-update/ 모두 작업
+
+"[core | meta] 버전 업데이트해줘"
+→ sax-core와 sax-meta 모두 버전 업데이트
+
+# 전체 패키지
 "[all] VERSION 파일 업데이트해줘"
 → sax-core, sax-meta, sax-po, sax-next 모두 업데이트
 
