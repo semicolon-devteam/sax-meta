@@ -352,6 +352,46 @@ print_summary() {
     echo ""
 }
 
+# 패키지 선택 메뉴
+select_package() {
+    echo ""
+    echo "설치할 패키지를 선택하세요:"
+    echo ""
+    echo "  1) sax-po    - PO/기획자용"
+    echo "                 기획 문서 작성, PRD 생성, 요구사항 정리"
+    echo ""
+    echo "  2) sax-next  - Next.js 개발자용"
+    echo "                 Next.js 프로젝트 개발 지원"
+    echo ""
+    echo "  3) sax-meta  - SAX 패키지 관리자용"
+    echo "                 SAX 패키지 개발 및 관리"
+    echo ""
+    echo "  q) 취소"
+    echo ""
+    print_prompt "선택 [1-3]: "
+    read -r choice
+
+    case "$choice" in
+        1)
+            PACKAGE="po"
+            ;;
+        2)
+            PACKAGE="next"
+            ;;
+        3)
+            PACKAGE="meta"
+            ;;
+        q|Q)
+            print_info "설치를 취소합니다"
+            exit 0
+            ;;
+        *)
+            print_error "잘못된 선택입니다"
+            exit 1
+            ;;
+    esac
+}
+
 # 인자 파싱
 parse_args() {
     PACKAGE=""
@@ -382,10 +422,9 @@ parse_args() {
         esac
     done
 
+    # 패키지 미지정 시 선택 메뉴 표시
     if [ -z "$PACKAGE" ]; then
-        print_error "패키지 이름이 필요합니다"
-        show_usage
-        exit 1
+        select_package
     fi
 }
 
