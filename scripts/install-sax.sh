@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# SAX Package Installer
-# Usage: ./install-sax.sh [package] [options]
-# Packages: po, next, meta
-# Options: --force, --update
-# Example: ./install-sax.sh po
-#          ./install-sax.sh po --force
+# SAX 패키지 설치 스크립트
+# 사용법: ./install-sax.sh [패키지] [옵션]
+# 패키지: po, next, meta
+# 옵션: --force, --update
+# 예시: ./install-sax.sh po
+#       ./install-sax.sh po --force
 
 set -e
 
-# Colors
+# 색상 정의
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -17,18 +17,18 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Configuration
+# 설정
 SAX_GITHUB_ORG="semicolon-devteam"
 SAX_CORE_REPO="sax-core"
 CLAUDE_DIR=".claude"
 FORCE_MODE=false
 UPDATE_MODE=false
 
-# Functions
+# 출력 함수
 print_header() {
     echo ""
     echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}  SAX Package Installer${NC}"
+    echo -e "${BLUE}  SAX 패키지 설치 스크립트${NC}"
     echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
     echo ""
 }
@@ -54,88 +54,66 @@ print_warning() {
 }
 
 print_prompt() {
-    echo -e "${CYAN}? $1${NC}"
+    echo -e -n "${CYAN}? $1${NC}"
 }
 
 show_usage() {
-    echo "Usage: $0 [package] [options]"
+    echo "사용법: $0 [패키지] [옵션]"
     echo ""
-    echo "Available packages:"
+    echo "사용 가능한 패키지:"
     echo "  po      - SAX-PO (PO/기획자용)"
     echo "  next    - SAX-Next (Next.js 개발자용)"
     echo "  meta    - SAX-Meta (SAX 패키지 관리자용)"
     echo ""
-    echo "Options:"
-    echo "  --force   - Remove existing installation and reinstall"
-    echo "  --update  - Update existing installation to latest version"
+    echo "옵션:"
+    echo "  --force, -f   - 기존 설치 삭제 후 재설치"
+    echo "  --update, -u  - 기존 설치를 최신 버전으로 업데이트"
+    echo "  --help, -h    - 도움말 표시"
     echo ""
-    echo "Examples:"
-    echo "  $0 po              # Install sax-po package"
-    echo "  $0 next --force    # Force reinstall sax-next"
-    echo "  $0 meta --update   # Update sax-meta to latest"
+    echo "예시:"
+    echo "  $0 po              # sax-po 설치"
+    echo "  $0 next --force    # sax-next 강제 재설치"
+    echo "  $0 meta --update   # sax-meta 최신 버전 업데이트"
     echo ""
-}
-
-ask_user() {
-    local prompt=$1
-    local default=${2:-n}
-
-    if [ "$default" = "y" ]; then
-        prompt="$prompt [Y/n]: "
-    else
-        prompt="$prompt [y/N]: "
-    fi
-
-    print_prompt "$prompt"
-    read -r answer
-
-    if [ -z "$answer" ]; then
-        answer=$default
-    fi
-
-    case "$answer" in
-        [Yy]|[Yy][Ee][Ss]) return 0 ;;
-        *) return 1 ;;
-    esac
 }
 
 check_prerequisites() {
-    print_step "Checking prerequisites..."
+    print_step "사전 요구사항 확인 중..."
 
-    # Check git
+    # git 확인
     if ! command -v git &> /dev/null; then
-        print_error "git is not installed. Please install git first."
+        print_error "git이 설치되어 있지 않습니다. git을 먼저 설치해주세요."
         exit 1
     fi
-    print_success "git found"
+    print_success "git 확인됨"
 
-    # Check if in git repository
+    # git 저장소 확인
     if ! git rev-parse --is-inside-work-tree &> /dev/null; then
-        print_error "Not in a git repository. Please initialize git first: git init"
+        print_error "git 저장소가 아닙니다. 먼저 git init을 실행해주세요."
         exit 1
     fi
-    print_success "git repository detected"
+    print_success "git 저장소 확인됨"
 
-    # Check GitHub CLI (optional but recommended)
+    # GitHub CLI 확인 (선택사항)
     if command -v gh &> /dev/null; then
-        print_success "GitHub CLI found (optional)"
+        print_success "GitHub CLI 확인됨 (선택사항)"
     else
-        print_info "GitHub CLI not found (optional, but recommended for private repos)"
+        print_info "GitHub CLI 미설치 (선택사항, private repo 접근 시 필요)"
     fi
 }
 
 create_claude_dir() {
-    print_step "Creating .claude directory..."
+    print_step ".claude 디렉토리 생성 중..."
 
     if [ -d "$CLAUDE_DIR" ]; then
-        print_info ".claude directory already exists"
+        print_info ".claude 디렉토리가 이미 존재합니다"
     else
         mkdir -p "$CLAUDE_DIR"
-        print_success "Created .claude directory"
+        print_success ".claude 디렉토리 생성 완료"
     fi
 }
 
-# Check if path is registered in git index (submodule or tracked)
+# git index에 등록되어 있는지 확인
 is_in_git_index() {
     local path=$1
     git ls-files --stage "$path" 2>/dev/null | grep -q . && return 0
@@ -143,32 +121,45 @@ is_in_git_index() {
     return 1
 }
 
-# Remove submodule completely
+# 서브모듈 완전 삭제
 remove_submodule() {
     local path=$1
-    local name=$(basename "$path")
 
-    print_step "Removing existing submodule: $path"
+    print_step "기존 서브모듈 삭제 중: $path"
 
-    # Remove from .gitmodules
+    # 1. .gitmodules에서 삭제
     if [ -f ".gitmodules" ]; then
         git config --file .gitmodules --remove-section "submodule.$path" 2>/dev/null || true
-        git add .gitmodules 2>/dev/null || true
+        # .gitmodules가 비어있으면 삭제
+        if [ ! -s ".gitmodules" ]; then
+            rm -f ".gitmodules"
+            git rm --cached .gitmodules 2>/dev/null || true
+        else
+            git add .gitmodules 2>/dev/null || true
+        fi
     fi
 
-    # Remove from .git/config
+    # 2. .git/config에서 삭제
     git config --remove-section "submodule.$path" 2>/dev/null || true
 
-    # Remove from index
-    git rm --cached "$path" 2>/dev/null || true
+    # 3. git index에서 삭제 (강제)
+    git rm -rf --cached "$path" 2>/dev/null || true
 
-    # Remove directory
+    # 4. 스테이징 영역 초기화 (해당 경로)
+    git reset HEAD "$path" 2>/dev/null || true
+
+    # 5. 디렉토리 삭제
     rm -rf "$path"
 
-    # Remove from .git/modules
+    # 6. .git/modules에서 삭제
     rm -rf ".git/modules/$path" 2>/dev/null || true
 
-    print_success "Removed submodule: $path"
+    # 7. 최종 확인 - 여전히 index에 있으면 강제 삭제
+    if git ls-files --stage "$path" 2>/dev/null | grep -q .; then
+        git update-index --force-remove "$path" 2>/dev/null || true
+    fi
+
+    print_success "서브모듈 삭제 완료: $path"
 }
 
 handle_existing_installation() {
@@ -177,77 +168,77 @@ handle_existing_installation() {
 
     if [ -d "$path" ] || is_in_git_index "$path"; then
         echo ""
-        print_warning "$name already exists at $path"
+        print_warning "$name 이(가) 이미 존재합니다: $path"
 
         if [ "$FORCE_MODE" = true ]; then
-            print_info "Force mode: removing existing installation..."
+            print_info "강제 모드: 기존 설치를 삭제합니다..."
             remove_submodule "$path"
-            return 0  # Proceed with fresh install
+            return 0  # 새로 설치 진행
         elif [ "$UPDATE_MODE" = true ]; then
-            print_info "Update mode: updating existing installation..."
+            print_info "업데이트 모드: 최신 버전으로 업데이트합니다..."
             if [ -d "$path" ]; then
                 cd "$path"
                 git fetch origin main
                 git reset --hard origin/main
                 cd - > /dev/null
-                print_success "$name updated to latest version"
+                print_success "$name 업데이트 완료"
             fi
-            return 1  # Skip install, already updated
+            return 1  # 설치 건너뜀
         else
             echo ""
-            echo "  Options:"
-            echo "    1) Update - Pull latest changes"
-            echo "    2) Reinstall - Remove and reinstall (clean)"
-            echo "    3) Skip - Keep existing installation"
-            echo "    4) Abort - Cancel installation"
+            echo "  선택 옵션:"
+            echo "    1) 업데이트 - 최신 버전으로 업데이트"
+            echo "    2) 재설치 - 삭제 후 새로 설치 (클린)"
+            echo "    3) 건너뛰기 - 기존 설치 유지"
+            echo "    4) 취소 - 설치 중단"
             echo ""
-            print_prompt "Choose an option [1-4]: "
+            print_prompt "옵션을 선택하세요 [1-4]: "
             read -r choice
 
             case "$choice" in
                 1)
-                    print_step "Updating $name..."
+                    print_step "$name 업데이트 중..."
                     if [ -d "$path" ]; then
                         cd "$path"
                         git fetch origin main
                         git reset --hard origin/main
                         cd - > /dev/null
-                        print_success "$name updated"
+                        print_success "$name 업데이트 완료"
                     else
-                        print_warning "Directory not found, will reinstall"
+                        print_warning "디렉토리가 없습니다. 재설치를 진행합니다"
                         remove_submodule "$path"
                         return 0
                     fi
-                    return 1  # Skip fresh install
+                    return 1  # 새 설치 건너뜀
                     ;;
                 2)
                     remove_submodule "$path"
-                    return 0  # Proceed with fresh install
+                    return 0  # 새로 설치 진행
                     ;;
                 3)
-                    print_info "Skipping $name installation"
-                    return 1  # Skip install
+                    print_info "$name 설치를 건너뜁니다"
+                    return 1  # 설치 건너뜀
                     ;;
                 4|*)
-                    print_error "Installation aborted"
+                    print_error "설치가 취소되었습니다"
                     exit 1
                     ;;
             esac
         fi
     fi
 
-    return 0  # No existing installation, proceed
+    return 0  # 기존 설치 없음, 새로 설치 진행
 }
 
 install_sax_core() {
-    print_step "Installing sax-core..."
+    print_step "sax-core 설치 중..."
 
     local core_path="$CLAUDE_DIR/sax-core"
 
     if handle_existing_installation "$core_path" "sax-core"; then
-        # Add as submodule
+        # 서브모듈로 추가
         git submodule add "https://github.com/$SAX_GITHUB_ORG/$SAX_CORE_REPO.git" "$core_path"
-        print_success "sax-core installed as submodule"
+        print_success "sax-core 서브모듈 설치 완료"
     fi
 }
 
@@ -256,12 +247,12 @@ install_sax_package() {
     local repo_name="sax-$package"
     local package_path="$CLAUDE_DIR/$repo_name"
 
-    print_step "Installing $repo_name..."
+    print_step "$repo_name 설치 중..."
 
     if handle_existing_installation "$package_path" "$repo_name"; then
-        # Add as submodule
+        # 서브모듈로 추가
         git submodule add "https://github.com/$SAX_GITHUB_ORG/$repo_name.git" "$package_path"
-        print_success "$repo_name installed as submodule"
+        print_success "$repo_name 서브모듈 설치 완료"
     fi
 }
 
@@ -270,66 +261,66 @@ setup_symlinks() {
     local repo_name="sax-$package"
     local package_path="$CLAUDE_DIR/$repo_name"
 
-    print_step "Setting up symlinks for $repo_name..."
+    print_step "$repo_name 심링크 설정 중..."
 
-    # CLAUDE.md symlink
+    # CLAUDE.md 심링크
     if [ -f "$package_path/CLAUDE.md" ]; then
         local claude_md_link="$CLAUDE_DIR/CLAUDE.md"
 
         if [ -L "$claude_md_link" ]; then
             rm "$claude_md_link"
         elif [ -f "$claude_md_link" ]; then
-            print_info "Backing up existing CLAUDE.md to CLAUDE.md.backup"
+            print_info "기존 CLAUDE.md를 CLAUDE.md.backup으로 백업합니다"
             mv "$claude_md_link" "$claude_md_link.backup"
         fi
 
         ln -s "$repo_name/CLAUDE.md" "$claude_md_link"
-        print_success "Created symlink: CLAUDE.md -> $repo_name/CLAUDE.md"
+        print_success "심링크 생성: CLAUDE.md -> $repo_name/CLAUDE.md"
     fi
 
-    # agents symlink
+    # agents 심링크
     if [ -d "$package_path/agents" ]; then
         local agents_link="$CLAUDE_DIR/agents"
 
         if [ -L "$agents_link" ]; then
             rm "$agents_link"
         elif [ -d "$agents_link" ]; then
-            print_info "Backing up existing agents/ to agents.backup/"
+            print_info "기존 agents/를 agents.backup/으로 백업합니다"
             mv "$agents_link" "$agents_link.backup"
         fi
 
         ln -s "$repo_name/agents" "$agents_link"
-        print_success "Created symlink: agents/ -> $repo_name/agents/"
+        print_success "심링크 생성: agents/ -> $repo_name/agents/"
     fi
 
-    # skills symlink
+    # skills 심링크
     if [ -d "$package_path/skills" ]; then
         local skills_link="$CLAUDE_DIR/skills"
 
         if [ -L "$skills_link" ]; then
             rm "$skills_link"
         elif [ -d "$skills_link" ]; then
-            print_info "Backing up existing skills/ to skills.backup/"
+            print_info "기존 skills/를 skills.backup/으로 백업합니다"
             mv "$skills_link" "$skills_link.backup"
         fi
 
         ln -s "$repo_name/skills" "$skills_link"
-        print_success "Created symlink: skills/ -> $repo_name/skills/"
+        print_success "심링크 생성: skills/ -> $repo_name/skills/"
     fi
 
-    # commands symlink
+    # commands 심링크
     if [ -d "$package_path/commands" ]; then
         local commands_link="$CLAUDE_DIR/commands"
 
         if [ -L "$commands_link" ]; then
             rm "$commands_link"
         elif [ -d "$commands_link" ]; then
-            print_info "Backing up existing commands/ to commands.backup/"
+            print_info "기존 commands/를 commands.backup/으로 백업합니다"
             mv "$commands_link" "$commands_link.backup"
         fi
 
         ln -s "$repo_name/commands" "$commands_link"
-        print_success "Created symlink: commands/ -> $repo_name/commands/"
+        print_success "심링크 생성: commands/ -> $repo_name/commands/"
     fi
 }
 
@@ -338,30 +329,30 @@ print_summary() {
 
     echo ""
     echo -e "${GREEN}════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}  Installation Complete!${NC}"
+    echo -e "${GREEN}  설치 완료!${NC}"
     echo -e "${GREEN}════════════════════════════════════════════════════════════${NC}"
     echo ""
-    echo "Installed structure:"
+    echo "설치된 구조:"
     echo ""
     echo "  .claude/"
     echo "  ├── CLAUDE.md -> sax-$package/CLAUDE.md"
     echo "  ├── agents/ -> sax-$package/agents/"
     echo "  ├── skills/ -> sax-$package/skills/"
-    echo "  ├── sax-core/          (submodule)"
-    echo "  └── sax-$package/      (submodule)"
+    echo "  ├── sax-core/          (서브모듈)"
+    echo "  └── sax-$package/      (서브모듈)"
     echo ""
-    echo "Next steps:"
-    echo "  1. Commit the changes: git add . && git commit -m 'Install SAX packages'"
-    echo "  2. Push to remote: git push"
+    echo "다음 단계:"
+    echo "  1. 변경사항 커밋: git add . && git commit -m 'SAX 패키지 설치'"
+    echo "  2. 원격 저장소 푸시: git push"
     echo ""
-    echo "To update SAX packages later:"
+    echo "나중에 SAX 패키지 업데이트:"
     echo "  git submodule update --remote"
-    echo "  # or"
+    echo "  # 또는"
     echo "  ./install-sax.sh $package --update"
     echo ""
 }
 
-# Parse arguments
+# 인자 파싱
 parse_args() {
     PACKAGE=""
 
@@ -384,7 +375,7 @@ parse_args() {
                 shift
                 ;;
             *)
-                print_error "Unknown option: $1"
+                print_error "알 수 없는 옵션: $1"
                 show_usage
                 exit 1
                 ;;
@@ -392,29 +383,29 @@ parse_args() {
     done
 
     if [ -z "$PACKAGE" ]; then
-        print_error "Package name is required"
+        print_error "패키지 이름이 필요합니다"
         show_usage
         exit 1
     fi
 }
 
-# Main
+# 메인 함수
 main() {
     print_header
 
     parse_args "$@"
 
-    print_info "Selected package: sax-$PACKAGE"
+    print_info "선택된 패키지: sax-$PACKAGE"
 
     if [ "$FORCE_MODE" = true ]; then
-        print_warning "Force mode enabled - will remove existing installations"
+        print_warning "강제 모드 활성화 - 기존 설치를 삭제합니다"
     fi
 
     if [ "$UPDATE_MODE" = true ]; then
-        print_info "Update mode enabled - will update existing installations"
+        print_info "업데이트 모드 활성화 - 최신 버전으로 업데이트합니다"
     fi
 
-    # Run installation steps
+    # 설치 단계 실행
     check_prerequisites
     create_claude_dir
     install_sax_core
