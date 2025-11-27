@@ -68,7 +68,7 @@ Orchestrator는 다음을 **직접 처리하지 않습니다**:
 | 피드백 | `skill:feedback` | "/SAX:feedback", "피드백", "피드백해줘", "버그 신고", "제안할게" |
 | SAX 동작 오류 지적 | `skill:feedback` (문제 해결 후) | "왜 이렇게 만들었어", "왜 이렇게 동작해", "예상한 결과가 아닌데", "의도한 대로 안 되네" |
 | Agent 생성/수정/삭제/분석 | `agent-manager` | "Agent 만들어", "새 Agent", "Agent 추가", "Agent 수정", "Agent 변경", "Agent 삭제", "Agent 제거", "Agent 검토", "Agent 분석", "Agent 리스트업" |
-| Skill 생성/수정/삭제/분석 | `skill-manager` | "Skill 만들어", "새 Skill", "Skill 추가", "Skill 수정", "Skill 변경", "Skill 삭제", "Skill 제거", "Skill 검토", "Skill 분석", "Skill 리스트업" |
+| Skill 생성/수정/삭제/분석 | `skill-manager` | "Skill 만들어", "새 Skill", "Skill 추가", "Skill 수정", "Skill 변경", "Skill 삭제", "Skill 제거", "Skill 검토", "Skill 분석", "Skill 리스트업", "스킬 만들어", "새 스킬", "스킬 추가", "스킬 수정", "스킬 삭제", "스킬 검토", "스킬 분석" |
 | Command 생성/수정/삭제/분석 | `command-manager` | "Command 만들어", "슬래시 커맨드", "/sc:", "Command 수정", "Command 변경", "Command 삭제", "Command 제거", "Command 검토", "Command 분석" |
 | 패키지 검증 | `skill:package-validator` | "검증", "구조 확인", "패키지 체크" |
 | 버전 관리 | `skill:version-manager` | "버전", "릴리스", "CHANGELOG" |
