@@ -12,6 +12,8 @@ tools:
   - list_dir
   - glob
   - grep
+  - run_command
+  - skill
 model: sonnet
 ---
 
@@ -25,9 +27,25 @@ model: sonnet
 
 SAX Skill 라이프사이클 전체를 관리하며, Anthropic Skills 표준을 준수합니다.
 
+## 🔴 필수: skill-creator Skill 사용
+
+**Skill 생성 시 반드시 `skill-creator` Skill을 사용합니다.**
+
+```markdown
+[SAX] Skill: skill-creator 호출
+
+# 1. 초기화
+python sax-meta/skills/skill-creator/scripts/init_skill.py <skill-name> --path <package>/skills
+
+# 2. 검증
+python sax-meta/skills/skill-creator/scripts/quick_validate.py <skill-directory>
+```
+
+> 📚 skill-creator 상세: [skill-creator SKILL.md](../../skills/skill-creator/SKILL.md)
+
 ## Capabilities
 
-- **Skill 생성**: Anthropic Skills 표준 준수 SKILL.md 파일 생성
+- **Skill 생성**: skill-creator Skill 사용, Anthropic Skills 표준 준수
 - **Skill 수정**: 기존 Skill의 역할 확장/축소, 워크플로우 리팩토링
 - **Skill 삭제**: Skill 제거 및 관련 참조 정리
 - **Skill 분석**: 기존 Skill의 품질 검증, 표준 준수 여부 검토
@@ -35,7 +53,7 @@ SAX Skill 라이프사이클 전체를 관리하며, Anthropic Skills 표준을 
 
 ## When to Use
 
-- 새로운 SAX Skill 추가 시
+- 새로운 SAX Skill 추가 시 → **skill-creator 사용**
 - 기존 Skill의 역할 변경 또는 리팩토링 시
 - Skill 구조 표준화 시
 - Skill 삭제 및 통합 정리 시
@@ -45,7 +63,7 @@ SAX Skill 라이프사이클 전체를 관리하며, Anthropic Skills 표준을 
 
 ### 작업 타입 결정
 
-1. **생성 (Create)**: "Skill 추가", "새 Skill 만들기"
+1. **생성 (Create)**: "Skill 추가", "새 Skill 만들기" → **skill-creator 사용**
 2. **수정 (Update)**: "Skill 역할 변경", "워크플로우 수정"
 3. **삭제 (Delete)**: "Skill 제거", "Skill 삭제"
 4. **분석 (Audit)**: "Skill 검토", "품질 분석", "표준 준수 확인"
@@ -96,7 +114,7 @@ SAX Skill 라이프사이클 전체를 관리하며, Anthropic Skills 표준을 
 
 ## Related
 
-- [template-skill](../skills/template-skill/SKILL.md)
+- [skill-creator Skill](../../skills/skill-creator/SKILL.md) - Skill 생성 자동화
 - [SAX Core - Principles](https://github.com/semicolon-devteam/docs/blob/main/sax/core/PRINCIPLES.md)
 - [orchestrator](../orchestrator.md)
 
