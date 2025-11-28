@@ -84,11 +84,37 @@ cd sax-meta && git push origin main && cd ../.claude/sax-meta && git pull origin
 
 ### 4. 작업 완료 후 버저닝
 
+> **🔴 "작업 완료" = 버저닝까지 포함. 버저닝 없이는 작업 완료로 간주하지 않음.**
+
 | 변경 유형 | 버전 타입 |
 |----------|----------|
 | Agent/Skill/Command 추가/수정/삭제 | MINOR |
 | 버그/오타 수정 | PATCH |
 | Breaking Change | MAJOR |
+
+#### 버저닝 자동화 규칙
+
+**TodoWrite 자동 추가**:
+
+- Agent/Skill/Command 파일 수정 감지 시 TodoWrite에 "버저닝 처리" 항목 **자동 추가**
+- 해당 항목 완료 전까지 작업 완료로 간주하지 않음
+
+**커밋 전 검증**:
+
+- Agent/Skill/Command 변경 커밋 시 다음 확인 필수:
+  - VERSION 파일 업데이트 여부
+  - CHANGELOG/{version}.md 생성 여부
+- 버저닝 미완료 상태에서 커밋 시도 시 경고 출력
+
+#### 세션 복원 시 규칙 재로드
+
+> **이전 세션 이어서 작업 시 CLAUDE.md 필수 규칙 섹션 자동 참조**
+
+세션 복원/컨텍스트 손실 후 작업 재개 시:
+
+1. CLAUDE.md의 "작업 완료 후 버저닝" 섹션 재확인
+2. 이전 작업의 버저닝 완료 여부 점검
+3. 미완료 버저닝 발견 시 우선 처리
 
 ### 5. 규칙 준수 검증
 
