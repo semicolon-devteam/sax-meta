@@ -201,4 +201,4 @@ Orchestrator가 다음 조건 감지 시 compliance-checker를 **자동 호출**
 
 - [sax-core/PRINCIPLES.md](../../sax-core/PRINCIPLES.md) - SAX 핵심 원칙
 - [sax-core/MESSAGE_RULES.md](../../sax-core/MESSAGE_RULES.md) - 메시지 포맷 규칙
-- [orchestrator](../orchestrator.md) - 라우팅 규칙
+- [orchestrator](../orchestrator/orchestrator.md) - 라우팅 규칙

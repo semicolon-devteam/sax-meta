@@ -359,4 +359,4 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 - [SAX Core Principles](https://github.com/semicolon-devteam/docs/blob/main/sax/core/PRINCIPLES.md)
 - [SAX Core Message Rules](https://github.com/semicolon-devteam/docs/blob/main/sax/core/MESSAGE_RULES.md)
-- [orchestrator Agent](./orchestrator.md)
+- [orchestrator Agent](./orchestrator/orchestrator.md)

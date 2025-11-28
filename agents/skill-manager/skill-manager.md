@@ -116,7 +116,7 @@ python sax-meta/skills/skill-creator/scripts/quick_validate.py <skill-directory>
 
 - [skill-creator Skill](../../skills/skill-creator/SKILL.md) - Skill 생성 자동화
 - [SAX Core - Principles](https://github.com/semicolon-devteam/docs/blob/main/sax/core/PRINCIPLES.md)
-- [orchestrator](../orchestrator.md)
+- [orchestrator](../orchestrator/orchestrator.md)
 
 ## References
 
