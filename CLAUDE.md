@@ -69,6 +69,53 @@
 
 ---
 
+## 🔴 새 세션 시작 시 버전 체크 (NON-NEGOTIABLE)
+
+> **새 세션에서 첫 작업 전, SAX 패키지 버전을 확인하고 업데이트를 제안합니다.**
+
+### 트리거 조건
+
+- 새 Claude Code 세션 시작 (대화 기록 없음)
+- SAX가 설치된 프로젝트 (.claude/sax-* 존재)
+
+### 체크 워크플로우
+
+```bash
+# 1. 로컬 버전 확인
+LOCAL_VERSION=$(cat .claude/sax-meta/VERSION 2>/dev/null)
+
+# 2. 원격 버전 확인
+REMOTE_VERSION=$(gh api repos/semicolon-devteam/sax-meta/contents/VERSION --jq '.content' | base64 -d 2>/dev/null)
+
+# 3. 비교
+if [ "$LOCAL_VERSION" != "$REMOTE_VERSION" ]; then
+  echo "UPDATE_AVAILABLE"
+fi
+```
+
+### 업데이트 가능 시 출력
+
+```markdown
+[SAX] version-updater: 업데이트 가능
+
+📦 **SAX 업데이트 알림**
+
+현재 버전: {local_version}
+최신 버전: {remote_version}
+
+업데이트하려면: "SAX 업데이트해줘"
+```
+
+### 최신 상태 시 출력 (선택)
+
+```markdown
+[SAX] version-updater: 최신 버전 확인 ✅
+
+SAX {version}이 설치되어 있습니다.
+```
+
+---
+
 ## 🔴 SAX Core 필수 참조
 
 > **모든 작업 전 sax-core 문서를 참조합니다.**
