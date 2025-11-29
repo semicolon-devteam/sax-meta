@@ -2,10 +2,10 @@
 
 # SAX 패키지 설치 스크립트
 # 사용법: ./install-sax.sh [패키지] [옵션]
-# 패키지: po, next, meta
+# 패키지: po, next, qa, meta
 # 옵션: --force, --update
 # 예시: ./install-sax.sh po
-#       ./install-sax.sh po --force
+#       ./install-sax.sh qa --force
 
 set -e
 
@@ -99,6 +99,7 @@ show_usage() {
     echo "사용 가능한 패키지:"
     echo "  po      - SAX-PO (PO/기획자용)"
     echo "  next    - SAX-Next (Next.js 개발자용)"
+    echo "  qa      - SAX-QA (QA 테스터용)"
     echo "  meta    - SAX-Meta (SAX 패키지 관리자용)"
     echo ""
     echo "옵션:"
@@ -108,6 +109,7 @@ show_usage() {
     echo ""
     echo "예시:"
     echo "  $0 po              # sax-po 설치"
+    echo "  $0 qa --force      # sax-qa 강제 재설치"
     echo "  $0 next --force    # sax-next 강제 재설치"
     echo "  $0 meta --update   # sax-meta 최신 버전 업데이트"
     echo ""
@@ -433,12 +435,15 @@ select_package() {
     echo "  2) sax-next  - Next.js 개발자용"
     echo "                 Next.js 프로젝트 개발 지원"
     echo ""
-    echo "  3) sax-meta  - SAX 패키지 관리자용"
+    echo "  3) sax-qa    - QA 테스터용"
+    echo "                 QA 테스트 워크플로우, 이슈 상태 관리"
+    echo ""
+    echo "  4) sax-meta  - SAX 패키지 관리자용"
     echo "                 SAX 패키지 개발 및 관리"
     echo ""
     echo "  q) 취소"
     echo ""
-    print_prompt "선택 [1-3]: "
+    print_prompt "선택 [1-4]: "
     read -r choice
 
     case "$choice" in
@@ -449,6 +454,9 @@ select_package() {
             PACKAGE="next"
             ;;
         3)
+            PACKAGE="qa"
+            ;;
+        4)
             PACKAGE="meta"
             ;;
         q|Q)
@@ -480,7 +488,7 @@ parse_args() {
                 show_usage
                 exit 0
                 ;;
-            po|next|meta)
+            po|next|qa|meta)
                 PACKAGE=$1
                 shift
                 ;;
