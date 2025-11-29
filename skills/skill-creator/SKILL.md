@@ -4,7 +4,10 @@ description: |
   SAX Skill 생성 가이드 및 자동화. Use when:
   (1) 새 Skill 생성 요청, (2) Skill 구조 초기화, (3) Skill 검증 필요,
   (4) Skill 패키징. Anthropic Skills 표준 기반.
+tools: [Read, Write, Bash]
 ---
+
+> **🔔 시스템 메시지**: 이 Skill이 호출되면 `[SAX] Skill: skill-creator 실행 - {작업 유형}` 시스템 메시지를 첫 줄에 출력하세요.
 
 # Skill Creator
 

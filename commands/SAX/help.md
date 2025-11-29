@@ -1,7 +1,6 @@
 ---
-name: /SAX:help
+name: help
 description: SAX-Meta 도움말 - sax-help skill 호출
-trigger: "/SAX:help"
 ---
 
 # /SAX:help Command
