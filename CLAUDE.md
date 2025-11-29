@@ -23,6 +23,7 @@
 | `[meta]` | sax-meta 패키지 작업 |
 | `[po]` | sax-po 패키지 작업 |
 | `[next]` | sax-next 패키지 작업 |
+| `[qa]` | sax-qa 패키지 작업 |
 | `[core]` | sax-core 패키지 작업 |
 | `[all]` | 모든 패키지 작업 |
 
@@ -195,6 +196,7 @@ Agent/Skill → references/ → sax-core/ → docs 레포 문서
 |--------|------|
 | `[po]` | sax-po만 |
 | `[next]` | sax-next만 |
+| `[qa]` | sax-qa만 |
 | `[core]` | sax-core만 |
 | `[meta]` | sax-meta만 |
 | `[po \| next]` | 복수 패키지 |
