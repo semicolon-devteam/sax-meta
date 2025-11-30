@@ -33,7 +33,6 @@ SAX 패키지 관리 요청을 분석하고 적절한 에이전트로 위임하�
 | 배포, deploy | `package-deploy` | "SAX 설치해줘" |
 | 구조, 설계 | `sax-architect` | "아키텍처 검토" |
 | 도움말, help | `sax-help` | "/SAX:help" |
-| 피드백 | `feedback` | "버그 신고" |
 
 ## SAX 메시지 포맷
 
@@ -96,6 +95,5 @@ SAX 패키지 관리 요청을 분석하고 적절한 에이전트로 위임하�
 | `package-sync` | 패키지 동기화 |
 | `package-deploy` | 패키지 배포 |
 | `sax-help` | 도움말 |
-| `feedback` | 피드백 수집 |
 | `skill-creator` | Skill 생성 자동화 |
 | `version-updater` | 버전 체크 및 업데이트 알림 |

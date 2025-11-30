@@ -40,8 +40,6 @@
 | User Intent | Route To | Detection Keywords |
 |-------------|----------|-------------------|
 | SAX init 커밋 | `sax-init` 프로세스 | "SAX init", "SAX 설치 커밋" |
-| 피드백 | `skill:feedback` | "/SAX:feedback", "피드백", "버그 신고" |
-| SAX 동작 오류 | `skill:feedback` | "SAX가 왜", "SAX 동작이" |
 | Agent 관리 | `agent-manager` | `@AGENT` + CRUD |
 | Skill 관리 | `skill-manager` | `@SKILL` + CRUD |
 | Command 관리 | `command-manager` | `@COMMAND` + CRUD |
