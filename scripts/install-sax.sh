@@ -329,22 +329,22 @@ setup_symlinks() {
     # skills 병합 (실제 디렉토리 생성 후 개별 심링크)
     setup_merged_dir "skills" "$package" "$core_path" "$package_path"
 
-    # commands 심링크/복사 (.claude/SAX/commands 로 생성)
-    if [ -d "$package_path/commands" ]; then
-        # SAX 디렉토리 생성
-        local sax_dir="$CLAUDE_DIR/SAX"
-        mkdir -p "$sax_dir"
+    # commands 심링크/복사 (.claude/commands/SAX 로 생성)
+    if [ -d "$package_path/commands/SAX" ]; then
+        # commands 디렉토리 생성
+        local commands_dir="$CLAUDE_DIR/commands"
+        mkdir -p "$commands_dir"
 
-        local commands_link="$sax_dir/commands"
+        local sax_commands_link="$commands_dir/SAX"
 
-        if [ -L "$commands_link" ]; then
-            rm "$commands_link"
-        elif [ -d "$commands_link" ]; then
-            print_info "기존 SAX/commands/를 SAX/commands.backup/으로 백업합니다"
-            mv "$commands_link" "$commands_link.backup"
+        if [ -L "$sax_commands_link" ]; then
+            rm "$sax_commands_link"
+        elif [ -d "$sax_commands_link" ]; then
+            print_info "기존 commands/SAX/를 commands/SAX.backup/으로 백업합니다"
+            mv "$sax_commands_link" "$sax_commands_link.backup"
         fi
 
-        create_link_or_copy "$package_path/commands" "$commands_link" "../$repo_name/commands"
+        create_link_or_copy "$package_path/commands/SAX" "$sax_commands_link" "../$repo_name/commands/SAX"
     fi
 }
 
@@ -438,8 +438,8 @@ print_summary() {
         echo "  ├── skills/                (병합 디렉토리)"
         echo "  │   ├── version-updater/   [core] sax-core"
         echo "  │   └── .../"
-        echo "  ├── SAX/"
-        echo "  │   └── commands/          (패키지 복사)"
+        echo "  ├── commands/"
+        echo "  │   └── SAX/               (패키지 복사)"
         echo "  ├── sax-core/              (서브모듈)"
         echo "  └── sax-$package/          (서브모듈)"
         echo ""
@@ -457,8 +457,8 @@ print_summary() {
         echo "  ├── skills/                    (병합 디렉토리)"
         echo "  │   ├── version-updater/       -> sax-core/skills/..."
         echo "  │   └── {패키지별 skill}/      -> sax-$package/skills/..."
-        echo "  ├── SAX/"
-        echo "  │   └── commands/ -> ../sax-$package/commands/"
+        echo "  ├── commands/"
+        echo "  │   └── SAX/ -> ../sax-$package/commands/SAX/"
         echo "  ├── sax-core/                  (서브모듈, 공통)"
         echo "  └── sax-$package/              (서브모듈, 패키지)"
     fi
