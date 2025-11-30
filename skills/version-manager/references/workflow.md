@@ -1,6 +1,6 @@
 # Workflow
 
-> version-manager의 8단계 버저닝 프로세스
+> version-manager의 9단계 버저닝 프로세스
 
 ## Input Schema
 
@@ -151,3 +151,65 @@ cd sax-next && git push origin main
 - ✅ Keep a Changelog 형식 준수 확인
 - ✅ 커밋 완료 확인 (`git log -1`)
 - ✅ **푸시 완료 확인** (`git status` - "Your branch is up to date")
+- ✅ **Slack 알림 전송 확인**
+
+## Phase 9: Slack 릴리스 알림 (필수)
+
+> **🔴 필수 단계**: 버저닝은 Slack 알림까지 완료해야 완료로 간주됩니다.
+
+푸시 완료 후 `notify-slack` Skill을 호출하여 `#_협업` 채널에 릴리스 알림을 전송합니다.
+
+### 알림 데이터 구성
+
+```yaml
+type: "release"
+package: "{package_name}"  # sax-po, sax-next, sax-meta, sax-core
+version: "{new_version}"
+changelog: |
+  {CHANGELOG 내용 요약}
+```
+
+### Slack 메시지 예시
+
+```
+🚀 SAX 패키지 업데이트
+
+📦 sax-po v0.16.0
+
+변경 내역:
+• report-bug: 버그 리포트 Skill 추가
+
+🔗 GitHub
+```
+
+### notify-slack 호출
+
+```bash
+# notify-slack Skill이 다음을 수행:
+# 1. CHANGELOG/{version}.md 파일 읽기
+# 2. 메시지 블록 구성
+# 3. Slack API 호출
+
+SLACK_BOT_TOKEN="xoxb-891491331223-9421307124626-eGiyqdlLJkMwrHoX4HUtrOCb"
+
+curl -X POST https://slack.com/api/chat.postMessage \
+  -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "channel": "#_협업",
+    "text": "🚀 SAX 패키지 업데이트",
+    "blocks": [...]
+  }'
+```
+
+### 완료 메시지
+
+```markdown
+[SAX] Skill: notify-slack 완료
+
+✅ Slack 릴리스 알림 전송 완료
+
+**채널**: #_협업
+**패키지**: {package_name}
+**버전**: v{new_version}
+```

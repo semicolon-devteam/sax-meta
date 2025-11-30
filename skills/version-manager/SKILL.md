@@ -52,6 +52,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 # 7. 푸시 (🔴 필수)
 git push origin main
+
+# 8. Slack 릴리스 알림 (🔴 필수)
+# notify-slack Skill 호출 → #_협업 채널
 ```
 
 ## Semantic Versioning 요약
@@ -72,6 +75,10 @@ git push origin main
 [SAX] Versioning: 커밋 완료 → 푸시 진행
 
 [SAX] Versioning: 완료 (푸시 성공)
+
+[SAX] Skill: notify-slack 호출 - 릴리스 알림
+
+[SAX] Versioning: Slack 알림 전송 완료 (#_협업)
 ```
 
 ## Related
@@ -85,6 +92,6 @@ git push origin main
 For detailed documentation, see:
 
 - [Semantic Versioning Rules](references/semantic-versioning.md) - MAJOR/MINOR/PATCH 상세 규칙
-- [Workflow](references/workflow.md) - 8단계 버저닝 프로세스 (커밋 & 푸시 포함)
+- [Workflow](references/workflow.md) - 9단계 버저닝 프로세스 (커밋 & 푸시 & Slack 알림)
 - [Changelog Format](references/changelog-format.md) - Keep a Changelog 템플릿
 - [Output Format](references/output-format.md) - 성공/실패 출력, Edge Cases
