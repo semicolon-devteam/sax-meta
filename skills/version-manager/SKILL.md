@@ -24,33 +24,20 @@ SAX 패키지의 Semantic Versioning 관리를 자동화합니다.
 ```bash
 # 1. 현재 버전 확인
 cat sax/VERSION
-# 예: 3.14.0
 
-# 2. 변경사항 분석 후 버전 타입 결정
-# MAJOR: 호환성 깨지는 변경
-# MINOR: 기능 추가/삭제 (Agent, Skill, Command)
-# PATCH: 버그 수정, 오타, 문서 보완
+# 2. 변경사항 분석 후 버전 타입 결정 (MAJOR/MINOR/PATCH)
 
 # 3. VERSION 업데이트
 echo "3.15.0" > sax/VERSION
 
 # 4. CHANGELOG 생성
-touch sax/CHANGELOG/v3.15.0.md
+# sax/CHANGELOG/{version}.md 파일 작성
 
-# 5. INDEX.md 업데이트
-# Latest Version, Version History 섹션 업데이트
-
-# 6. 커밋 (CLAUDE.md 버저닝 커밋 형식 준수)
-git add -A && git commit -m "🔖 [SAX] 3.15.0: {변경 요약}
-
-- 상세 변경 내용 1
-- 상세 변경 내용 2
-
-# 7. 푸시 (🔴 필수)
+# 5. 커밋 & 푸시
+git add -A && git commit -m "🔖 [SAX] 3.15.0: {변경 요약}"
 git push origin main
 
-# 8. Slack 릴리스 알림 (🔴 필수)
-# notify-slack Skill 호출 → #_협업 채널
+# 6. 🔴 Slack 알림 (필수) - 아래 섹션 참조
 ```
 
 ## Semantic Versioning 요약
@@ -60,6 +47,34 @@ git push origin main
 | **MAJOR** | 호환성 깨지는 변경 | 워크플로우 근본 변경 |
 | **MINOR** | 기능 추가/삭제 | Agent/Skill 추가, CLAUDE.md 변경 |
 | **PATCH** | 버그/오타 수정 | 문서 보완, 성능 개선 |
+
+## 🔴 필수: Slack 릴리스 알림
+
+> **버저닝은 Slack 알림까지 완료해야 완료로 간주됩니다.**
+
+커밋 & 푸시 완료 후 **반드시** `notify-slack` Skill 호출:
+
+```markdown
+[SAX] Skill: notify-slack 호출 - 릴리스 알림
+```
+
+### 알림 내용
+
+| 항목 | 값 |
+|------|-----|
+| **채널** | #_협업 |
+| **타입** | release |
+| **패키지** | sax-{package} |
+| **버전** | v{new_version} |
+| **변경 내역** | CHANGELOG 요약 |
+
+### 완료 확인
+
+```markdown
+[SAX] Versioning: Slack 알림 전송 완료 (#_협업)
+```
+
+> **⚠️ 이 단계를 누락하면 버저닝 미완료 상태입니다.**
 
 ## SAX Message
 
