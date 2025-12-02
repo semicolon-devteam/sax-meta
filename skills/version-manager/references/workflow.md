@@ -1,6 +1,6 @@
 # Workflow
 
-> version-manager의 9단계 버저닝 프로세스
+> version-manager의 10단계 버저닝 프로세스
 
 ## Input Schema
 
@@ -12,10 +12,16 @@
       "component": "Agent|Skill|Command|Config",
       "name": "component-name",
       "description": "변경 사항 설명",
-      "package": "sax-po|sax-next|sax-meta"
+      "package": "sax-po|sax-next|sax-meta|sax-core"
     }
   ],
-  "version_hint": "major|minor|patch|auto"
+  "version_hint": "major|minor|patch|auto",
+  "feedback_issues": [
+    {
+      "repo": "sax-po|sax-next|sax-meta|sax-core",
+      "number": 123
+    }
+  ]
 }
 ```
 
@@ -134,25 +140,6 @@ cd sax-po && git push origin main
 cd sax-next && git push origin main
 ```
 
-## Validation
-
-**버저닝 전**:
-
-- ✅ VERSION 파일 존재
-- ✅ CHANGELOG/ 디렉토리 존재
-- ✅ INDEX.md 파일 존재
-- ✅ changes 배열 비어있지 않음
-
-**버저닝 후**:
-
-- ✅ VERSION 파일 업데이트 확인
-- ✅ CHANGELOG/{new_version}.md 생성 확인
-- ✅ INDEX.md Latest Version 업데이트 확인
-- ✅ Keep a Changelog 형식 준수 확인
-- ✅ 커밋 완료 확인 (`git log -1`)
-- ✅ **푸시 완료 확인** (`git status` - "Your branch is up to date")
-- ✅ **Slack 알림 전송 확인**
-
 ## Phase 9: Slack 릴리스 알림 (필수)
 
 > **🔴 필수 단계**: 버저닝은 Slack 알림까지 완료해야 완료로 간주됩니다.
@@ -213,3 +200,152 @@ curl -X POST https://slack.com/api/chat.postMessage \
 **패키지**: {package_name}
 **버전**: v{new_version}
 ```
+
+## Phase 10: 피드백 이슈 완료 처리 (조건부)
+
+> **피드백 이슈 기반 버저닝일 때만 실행**
+
+### 피드백 이슈 감지
+
+**자동 감지** (커밋 메시지 분석):
+
+```bash
+# 커밋 메시지에서 이슈 참조 추출
+git log -1 --format="%B" | grep -oE "(#[0-9]+|Fixes #[0-9]+|Closes #[0-9]+)" | grep -oE "[0-9]+"
+```
+
+**명시적 지정** (Input Schema):
+
+```yaml
+feedback_issues:
+  - repo: "sax-po"
+    number: 123
+```
+
+### 이슈 정보 조회
+
+```bash
+# 이슈 상세 정보 조회
+gh issue view {이슈번호} --repo semicolon-devteam/{repo} --json author,labels,body
+
+# 예시 출력:
+# {
+#   "author": {"login": "kyago"},
+#   "labels": [{"name": "bug"}, {"name": "sax-po"}],
+#   "body": "...\n🤖 SAX Feedback Skill (sax-core)로 자동 생성됨"
+# }
+```
+
+### 피드백 이슈 판별 조건
+
+다음 조건을 **모두** 만족해야 피드백 이슈로 판별:
+
+1. **라벨 조건**: `bug` 또는 `enhancement` 라벨 존재
+2. **출처 조건**: 본문에 `SAX Feedback Skill` 문구 포함
+
+```bash
+# 판별 스크립트
+ISSUE_DATA=$(gh issue view {이슈번호} --repo semicolon-devteam/{repo} --json author,labels,body)
+
+# 라벨 확인
+HAS_FEEDBACK_LABEL=$(echo "$ISSUE_DATA" | jq '.labels[] | select(.name == "bug" or .name == "enhancement")' | head -1)
+
+# 출처 확인
+HAS_SAX_ORIGIN=$(echo "$ISSUE_DATA" | jq -r '.body' | grep -c "SAX Feedback Skill")
+
+if [ -n "$HAS_FEEDBACK_LABEL" ] && [ "$HAS_SAX_ORIGIN" -gt 0 ]; then
+  echo "피드백 이슈 확인됨"
+fi
+```
+
+### GitHub 이슈에 완료 코멘트 추가
+
+```bash
+# 이슈 작성자 조회
+AUTHOR=$(gh issue view {이슈번호} --repo semicolon-devteam/{repo} --json author --jq '.author.login')
+
+# 완료 코멘트 추가
+gh issue comment {이슈번호} --repo semicolon-devteam/{repo} --body "$(cat <<EOF
+✅ **피드백 반영 완료**
+
+@${AUTHOR} 님의 피드백이 **v{new_version}**에 반영되었습니다.
+
+**변경 내역**:
+{CHANGELOG 요약 - 불릿 포인트}
+
+SAX를 사용해주셔서 감사합니다! 🙏
+
+---
+🤖 SAX version-manager로 자동 생성됨
+EOF
+)"
+```
+
+### Slack 알림에 피드백 작성자 멘션 추가
+
+기존 릴리스 알림에 피드백 작성자 섹션 추가:
+
+```json
+{
+  "channel": "#_협업",
+  "blocks": [
+    // ... 기존 릴리스 알림 블록 ...
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "📣 *피드백 반영*: @{slack_user} 님의 제안이 반영되었습니다!"
+      }
+    }
+  ]
+}
+```
+
+**GitHub → Slack 사용자 매핑**:
+
+```bash
+# notify-slack의 동적 조회 활용
+# 1. GitHub 사용자명으로 Slack 사용자 검색
+# 2. 실명/이메일 기반 매핑 시도
+# 3. 매핑 실패 시 GitHub 사용자명 표시 (@kyago)
+```
+
+### 완료 메시지
+
+```markdown
+[SAX] Versioning: 피드백 이슈 처리 완료
+
+✅ GitHub 이슈 #{이슈번호} 완료 코멘트 추가
+✅ Slack 알림에 @{작성자} 멘션 포함
+
+**피드백 작성자**: @{author}
+**이슈**: semicolon-devteam/{repo}#{이슈번호}
+```
+
+### 피드백 이슈가 없는 경우
+
+피드백 이슈가 감지되지 않으면 Phase 10은 스킵됩니다:
+
+```markdown
+[SAX] Versioning: 피드백 이슈 없음 - Phase 10 스킵
+```
+
+## Validation
+
+**버저닝 전**:
+
+- ✅ VERSION 파일 존재
+- ✅ CHANGELOG/ 디렉토리 존재
+- ✅ INDEX.md 파일 존재
+- ✅ changes 배열 비어있지 않음
+
+**버저닝 후**:
+
+- ✅ VERSION 파일 업데이트 확인
+- ✅ CHANGELOG/{new_version}.md 생성 확인
+- ✅ INDEX.md Latest Version 업데이트 확인
+- ✅ Keep a Changelog 형식 준수 확인
+- ✅ 커밋 완료 확인 (`git log -1`)
+- ✅ **푸시 완료 확인** (`git status` - "Your branch is up to date")
+- ✅ **Slack 알림 전송 확인**
+- ✅ **피드백 이슈 완료 처리 확인** (조건부)
