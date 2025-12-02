@@ -127,6 +127,25 @@ feedback_issues:
 
 > **⚠️ 이 단계를 누락하면 버저닝 미완료 상태입니다.**
 
+## 🔴 필수: sax-meta 로컬 동기화
+
+> **sax-meta 버저닝 시, 현재 환경의 `.claude/sax-meta/`도 동기화해야 합니다.**
+
+sax-meta를 수정하는 환경 = sax-meta가 설치된 환경이므로,
+원본 push 후 로컬 서브모듈도 반드시 동기화:
+
+```bash
+cd .claude/sax-meta && git pull origin main
+```
+
+### 동기화 완료 확인
+
+```markdown
+[SAX] Versioning: 로컬 동기화 완료 (.claude/sax-meta/)
+```
+
+> **⚠️ sax-meta 버저닝 시 이 단계를 누락하면 버저닝 미완료 상태입니다.**
+
 ## SAX Message
 
 ```markdown
@@ -141,6 +160,8 @@ feedback_issues:
 [SAX] Skill: notify-slack 호출 - 릴리스 알림
 
 [SAX] Versioning: Slack 알림 전송 완료 (#_협업)
+
+[SAX] Versioning: 로컬 동기화 완료 (.claude/sax-meta/)  # sax-meta 버저닝 시만
 ```
 
 ## Related
