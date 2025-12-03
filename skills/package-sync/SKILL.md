@@ -16,6 +16,50 @@ tools: [Bash, Read, Grep]
 
 1. **docs 레포**: `sax/packages/{package}/` 소스를 `.claude/{package}/`로 동기화
 2. **로컬 환경**: 서브모듈 업데이트 후 `.claude/` 심볼릭 링크 동기화
+3. **무결성 검증**: 동기화 상태만 검증 (수정 없이)
+
+## 호출 모드
+
+| 모드 | 동작 | 사용 상황 |
+|------|------|----------|
+| (기본) | 동기화 실행 | 수동 동기화 요청 시 |
+| `--check-only` | 검증만 수행, 불일치 리포트 | version-updater에서 호출 시 |
+
+### --check-only 모드
+
+동기화 실행 없이 현재 상태만 검증합니다:
+
+```bash
+# 심볼릭 링크 상태 검증
+for type in skills agents; do
+  for link in .claude/$type/*/; do
+    [ -L "${link%/}" ] || continue
+    target=$(readlink "${link%/}")
+    [ -e "${link%/}" ] && echo "✅ $type/$(basename $link)" || echo "❌ $type/$(basename $link) → 깨진 링크"
+  done
+done
+```
+
+**출력 포맷** (version-updater 파싱용):
+
+```markdown
+[SAX] Skill: package-sync --check-only 실행
+
+## 동기화 상태 검증
+
+| 유형 | 정상 | 깨진 링크 | 누락 |
+|------|------|----------|------|
+| Skills | 8 | 0 | 0 |
+| Agents | 5 | 1 | 2 |
+| Commands | 4 | 0 | 0 |
+
+**결과**: ⚠️ 불일치 발견 (자동 수정 필요)
+```
+
+**결과 상태**:
+
+- `✅ 동기화 정상` - 모든 링크 정상
+- `⚠️ 불일치 발견` - 수정 필요 (version-updater가 동기화 실행 결정)
 
 ## Quick Start
 
