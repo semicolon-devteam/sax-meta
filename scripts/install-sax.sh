@@ -104,6 +104,7 @@ show_usage() {
     echo "  pm      - SAX-PM (PM/프로젝트 매니저용)"
     echo "  backend - SAX-Backend (백엔드 개발자용)"
     echo "  infra   - SAX-Infra (인프라/DevOps용)"
+    echo "  design  - SAX-Design (UI/UX 디자이너용)"
     echo ""
     echo "옵션:"
     echo "  --force, -f   - 기존 설치 삭제 후 재설치"
@@ -586,9 +587,12 @@ select_package() {
     echo "  7) sax-infra   - 인프라/DevOps용"
     echo "                   인프라 구성 및 배포 관리"
     echo ""
+    echo "  8) sax-design  - UI/UX 디자이너용"
+    echo "                   Claude Code + Antigravity 통합, 목업 생성, 핸드오프"
+    echo ""
     echo "  q) 취소"
     echo ""
-    print_prompt "선택 [1-7]: "
+    print_prompt "선택 [1-8]: "
     read -r choice
 
     case "$choice" in
@@ -612,6 +616,9 @@ select_package() {
             ;;
         7)
             PACKAGE="infra"
+            ;;
+        8)
+            PACKAGE="design"
             ;;
         q|Q)
             print_info "설치를 취소합니다"
@@ -642,7 +649,7 @@ parse_args() {
                 show_usage
                 exit 0
                 ;;
-            po|next|qa|meta|pm|backend|infra)
+            po|next|qa|meta|pm|backend|infra|design)
                 PACKAGE=$1
                 shift
                 ;;
