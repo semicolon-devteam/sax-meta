@@ -117,9 +117,13 @@ gh api repos/semicolon-devteam/docs/issues --jq '.[] | select(.state == "open" a
    ```
 
 3. **Slack 사용자 ID 조회**
+
+   > 📖 **Slack 설정**: [sax-core/_shared/slack-config.md](../../sax-core/_shared/slack-config.md) 참조
+
    ```bash
+   # 토큰은 sax-core/_shared/slack-config.md 참조
    SLACK_ID=$(curl -s "https://slack.com/api/users.list" \
-     -H "Authorization: Bearer xoxb-891491331223-9421307124626-eGiyqdlLJkMwrHoX4HUtrOCb" \
+     -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
      | jq -r --arg name "$SLACK_NAME" '
        .members[]
        | select(.deleted == false and .is_bot == false)
@@ -133,8 +137,9 @@ gh api repos/semicolon-devteam/docs/issues --jq '.[] | select(.state == "open" a
 
 4. **슬랙 알림 전송**
    ```bash
+   # 토큰은 sax-core/_shared/slack-config.md 참조
    curl -s -X POST https://slack.com/api/chat.postMessage \
-     -H "Authorization: Bearer xoxb-891491331223-9421307124626-eGiyqdlLJkMwrHoX4HUtrOCb" \
+     -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
      -H "Content-Type: application/json; charset=utf-8" \
      -d '{
        "channel": "#_협업",
@@ -233,5 +238,6 @@ sax-po         #12
 
 ## References
 
+- [Slack 설정 (토큰, 채널)](../../sax-core/_shared/slack-config.md)
 - [팀원 정보 (GitHub ↔ Slack 매핑)](../../sax-core/_shared/team-members.md)
 - [notify-slack Skill](../../sax-core/skills/notify-slack/SKILL.md)

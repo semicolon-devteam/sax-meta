@@ -171,13 +171,16 @@ changelog: |
 
 ### notify-slack 호출
 
+> 📖 **Slack 설정**: [sax-core/_shared/slack-config.md](../../../sax-core/_shared/slack-config.md) 참조
+
 ```bash
 # notify-slack Skill이 다음을 수행:
 # 1. CHANGELOG/{version}.md 파일 읽기
 # 2. 메시지 블록 구성
 # 3. Slack API 호출
 
-SLACK_BOT_TOKEN="xoxb-891491331223-9421307124626-eGiyqdlLJkMwrHoX4HUtrOCb"
+# 토큰은 sax-core/_shared/slack-config.md 참조
+# SLACK_BOT_TOKEN은 환경변수로 설정
 
 curl -X POST https://slack.com/api/chat.postMessage \
   -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
