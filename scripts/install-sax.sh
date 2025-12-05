@@ -243,7 +243,7 @@ handle_existing_installation() {
             echo "    4) 취소 - 설치 중단"
             echo ""
             print_prompt "옵션을 선택하세요 [1-4]: "
-            read -r choice
+            read -r choice </dev/tty
 
             case "$choice" in
                 1)
@@ -598,7 +598,7 @@ select_package() {
     echo "  q) 취소"
     echo ""
     print_prompt "선택 [1-9]: "
-    read -r choice
+    read -r choice </dev/tty
 
     case "$choice" in
         1)
