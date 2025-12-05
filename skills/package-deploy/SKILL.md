@@ -60,8 +60,14 @@ git submodule update --remote
 | 패키지 | 대상 프로젝트 | 용도 |
 |--------|-------------|------|
 | sax-core | command-center | 공통 규칙 |
+| sax-po | cm-template | PO/기획자 지원 |
 | sax-next | cm-template, cm-* | Next.js 개발 |
-| sax-spring | core-backend | Spring 개발 (예정) |
+| sax-qa | cm-template | QA 테스트 |
+| sax-pm | 모든 프로젝트 | PM/프로젝트 관리 |
+| sax-backend | core-backend | 백엔드 개발 |
+| sax-infra | 인프라 프로젝트 | DevOps/인프라 |
+| sax-design | 디자인 프로젝트 | UI/UX 디자인 |
+| sax-ms | ms-* | 마이크로서비스 개발 |
 
 ## Deployment Options
 

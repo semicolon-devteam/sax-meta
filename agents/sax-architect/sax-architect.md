@@ -108,21 +108,35 @@ Phase 5: 완료 보고 → 변경 사항 요약
 | `select_package()` | 메뉴 번호 추가 및 case 문에 패키지 추가 |
 | `parse_args()` | case 패턴에 패키지명 추가 (`po\|next\|...\|{name}`) |
 
-### 예시: sax-design 패키지 추가
+### 예시: sax-ms 패키지 추가
 
 ```bash
 # show_usage()
-echo "  design  - SAX-Design (UI/UX 디자이너용)"
+echo "  ms      - SAX-MS (마이크로서비스 개발자용)"
 
 # select_package()
-echo "  8) sax-design  - UI/UX 디자이너용"
-echo "                   Claude Code + Antigravity 통합, 목업 생성, 핸드오프"
+echo "  9) sax-ms      - 마이크로서비스 개발자용"
+echo "                   MS 아키텍처 설계, 이벤트 스키마, 워커 구현"
 # case 문
-8) PACKAGE="design" ;;
+9) PACKAGE="ms" ;;
 
 # parse_args()
-po|next|qa|meta|pm|backend|infra|design)
+po|next|qa|meta|pm|backend|infra|design|ms)
 ```
+
+### 현재 지원 패키지 목록
+
+| 번호 | 패키지 | 대상 |
+|------|--------|------|
+| 1 | sax-po | PO/기획자 |
+| 2 | sax-next | Next.js 개발자 |
+| 3 | sax-qa | QA 테스터 |
+| 4 | sax-meta | SAX 패키지 관리자 |
+| 5 | sax-pm | PM/프로젝트 매니저 |
+| 6 | sax-backend | 백엔드 개발자 |
+| 7 | sax-infra | 인프라/DevOps |
+| 8 | sax-design | UI/UX 디자이너 |
+| 9 | sax-ms | 마이크로서비스 개발자 |
 
 ### 체크리스트 추가
 
