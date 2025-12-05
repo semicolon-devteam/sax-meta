@@ -105,6 +105,7 @@ show_usage() {
     echo "  backend - SAX-Backend (백엔드 개발자용)"
     echo "  infra   - SAX-Infra (인프라/DevOps용)"
     echo "  design  - SAX-Design (UI/UX 디자이너용)"
+    echo "  ms      - SAX-MS (마이크로서비스 개발자용)"
     echo ""
     echo "옵션:"
     echo "  --force, -f   - 기존 설치 삭제 후 재설치"
@@ -119,6 +120,7 @@ show_usage() {
     echo "  $0 pm              # sax-pm 설치"
     echo "  $0 backend         # sax-backend 설치"
     echo "  $0 infra           # sax-infra 설치"
+    echo "  $0 ms              # sax-ms 설치"
     echo ""
 }
 
@@ -590,9 +592,12 @@ select_package() {
     echo "  8) sax-design  - UI/UX 디자이너용"
     echo "                   Claude Code + Antigravity 통합, 목업 생성, 핸드오프"
     echo ""
+    echo "  9) sax-ms      - 마이크로서비스 개발자용"
+    echo "                   MS 아키텍처 설계, 이벤트 스키마, 워커 구현"
+    echo ""
     echo "  q) 취소"
     echo ""
-    print_prompt "선택 [1-8]: "
+    print_prompt "선택 [1-9]: "
     read -r choice
 
     case "$choice" in
@@ -619,6 +624,9 @@ select_package() {
             ;;
         8)
             PACKAGE="design"
+            ;;
+        9)
+            PACKAGE="ms"
             ;;
         q|Q)
             print_info "설치를 취소합니다"
@@ -649,7 +657,7 @@ parse_args() {
                 show_usage
                 exit 0
                 ;;
-            po|next|qa|meta|pm|backend|infra|design)
+            po|next|qa|meta|pm|backend|infra|design|ms)
                 PACKAGE=$1
                 shift
                 ;;
