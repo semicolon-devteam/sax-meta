@@ -289,8 +289,8 @@ install_sax_core() {
     local result=$?
 
     if [ $result -eq 0 ]; then
-        # 새로 설치 진행
-        git submodule add "https://github.com/$SAX_GITHUB_ORG/$SAX_CORE_REPO.git" "$core_path"
+        # 새로 설치 진행 (-f: .gitignore에 .claude가 있어도 강제 추가)
+        git submodule add -f "https://github.com/$SAX_GITHUB_ORG/$SAX_CORE_REPO.git" "$core_path"
         print_success "sax-core 서브모듈 설치 완료"
     fi
     # result=1: 건너뜀, result=2: 업데이트 완료 (심링크 재설정은 main에서 처리)
@@ -307,8 +307,8 @@ install_sax_package() {
     local result=$?
 
     if [ $result -eq 0 ]; then
-        # 새로 설치 진행
-        git submodule add "https://github.com/$SAX_GITHUB_ORG/$repo_name.git" "$package_path"
+        # 새로 설치 진행 (-f: .gitignore에 .claude가 있어도 강제 추가)
+        git submodule add -f "https://github.com/$SAX_GITHUB_ORG/$repo_name.git" "$package_path"
         print_success "$repo_name 서브모듈 설치 완료"
     fi
     # result=1: 건너뜀, result=2: 업데이트 완료 (심링크 재설정은 main에서 처리)
