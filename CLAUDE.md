@@ -159,6 +159,7 @@ REMOTE=$(gh api repos/semicolon-devteam/sax-meta/contents/VERSION --jq '.content
 | `/SAX:slack` | Slack 메시지 전송 | notify-slack |
 | `/SAX:update` | SAX 업데이트 | version-updater |
 | `/SAX:feedback` | 피드백 제출 | feedback |
+| `/SAX:audit` | SAX 패키지 품질 감사 | audit-sax |
 
 ---
 
