@@ -1,7 +1,7 @@
 ---
 name: compliance-checker
 description: |
-  SAX 작업 완료 후 규칙 준수 검증 Agent. AUTOMATICALLY invoked after:
+  SAX 작업 완료 후 규칙 준수 검증 Agent. PROACTIVELY use when:
   (1) Any file creation/modification in SAX packages, (2) Agent/Skill/Command changes,
   (3) CLAUDE.md or orchestrator modifications. Validates sax-core compliance,
   routing correctness, and document duplication.
