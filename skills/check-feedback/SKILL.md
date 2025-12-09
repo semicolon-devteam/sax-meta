@@ -95,20 +95,24 @@ gh api repos/semicolon-devteam/docs/issues --jq '.[] | select(.state == "open" a
 2. **GitHub → Slack 사용자 매칭**
 
    > 📖 **팀원 매핑**: [sax-core/_shared/team-members.md](../../sax-core/_shared/team-members.md) 참조
+   >
+   > 🔴 **Slack ID는 하드코딩하지 마세요!** 반드시 Slack API를 통해 동적으로 조회합니다.
 
    ```bash
    # GitHub ID → Slack Display Name 변환 함수
    # 매핑 정보는 sax-core/_shared/team-members.md 참조
+   # 🔴 이 함수는 Display Name만 반환합니다. Slack ID는 Step 3에서 동적 조회!
    get_slack_name() {
      local github_id="$1"
      case "$github_id" in
        "reus-jeon") echo "Reus" ;;
-       "Garden0312") echo "Garden" ;;
-       "kokkh") echo "kyago" ;;
-       "swon3210") echo "Roki" ;;
-       "bon-jang") echo "bon" ;;
-       "DwightKSchrute") echo "dwight.k" ;;
-       "yeomso") echo "Yeomso" ;;
+       "garden92") echo "Garden" ;;
+       "kokkh") echo "Goni" ;;
+       "kyago") echo "kyago" ;;
+       "Roki-Noh") echo "Roki" ;;
+       "Brightbong92") echo "bon" ;;
+       "gtod8010") echo "dwight.k" ;;
+       "Yeomsoyam") echo "Yeomso" ;;
        *) echo "$github_id" ;;
      esac
    }

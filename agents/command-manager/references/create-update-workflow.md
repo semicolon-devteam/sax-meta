@@ -54,18 +54,23 @@ Commands 섹션에 새 커맨드 추가:
 
 ### 1.4 동기화
 
+> **⚠️ 중요**: Commands는 **심볼릭 링크 방식**으로 병합합니다. `--delete` 옵션 사용 금지!
+
 ```bash
-# 1. SAX commands 동기화
-rsync -av --delete \
-  --exclude='.git' \
-  sax/packages/sax-po/commands/SAX/ \
-  .claude/commands/SAX/
+# 1. 새 커맨드 파일 → .claude/commands/SAX/ 복사
+cp sax/packages/sax-po/commands/SAX/new-command.md \
+  .claude/commands/SAX/new-command.md
 
 # 2. CLAUDE.md 동기화
 rsync -av \
   sax/packages/sax-po/CLAUDE.md \
   .claude/CLAUDE.md
 ```
+
+**병합 원칙**:
+- sax-core commands: 심볼릭 링크
+- sax-meta commands: 실제 파일 복사
+- 동일 이름 시 sax-meta 우선
 
 ### 1.5 검증
 
@@ -116,12 +121,15 @@ grep -r "{command-name}" sax/packages/sax-po/
 mv sax/packages/sax-po/commands/SAX/{old-name}.md \
    sax/packages/sax-po/commands/SAX/{new-name}.md
 
-# CLAUDE.md 업데이트
-# .claude/ 동기화
-rsync -av --delete \
-  --exclude='.git' \
-  sax/packages/sax-po/commands/SAX/ \
-  .claude/commands/SAX/
+# .claude/ 기존 파일 제거 후 새 파일 복사
+rm .claude/commands/SAX/{old-name}.md
+cp sax/packages/sax-po/commands/SAX/{new-name}.md \
+  .claude/commands/SAX/{new-name}.md
+
+# CLAUDE.md 동기화
+rsync -av \
+  sax/packages/sax-po/CLAUDE.md \
+  .claude/CLAUDE.md
 ```
 
 ### 2.4 검증
