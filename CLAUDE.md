@@ -30,6 +30,7 @@
 | `[qa]` | sax-qa 패키지 작업 |
 | `[core]` | sax-core 패키지 작업 |
 | `[ms]` | sax-ms 패키지 작업 |
+| `[mvp]` | sax-mvp 패키지 작업 |
 | `[all]` | 모든 패키지 작업 |
 
 **접두사 감지 시 첫 출력**:
@@ -60,6 +61,7 @@
 | sax-qa | `sax-qa/VERSION` | `sax-qa/CHANGELOG/` |
 | sax-core | `sax-core/VERSION` | `sax-core/CHANGELOG/` |
 | sax-ms | `sax-ms/VERSION` | `sax-ms/CHANGELOG/` |
+| sax-mvp | `sax-mvp/VERSION` | `sax-mvp/CHANGELOG/` |
 
 ### 버전 타입
 
@@ -189,6 +191,7 @@ Agent/Skill → references/ → sax-core/ → docs 레포 문서
 | `[core]` | sax-core만 |
 | `[meta]` | sax-meta만 |
 | `[ms]` | sax-ms만 |
+| `[mvp]` | sax-mvp만 |
 | `[po \| next]` | 복수 패키지 |
 | `[ms \| next]` | 복수 패키지 |
 | `[all]` / (없음) | 모든 패키지 |
